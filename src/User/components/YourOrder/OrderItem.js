@@ -13,7 +13,7 @@ const OrderItem = ({ order }) => {
           Tổng số tiền: {order.order.totalPrice.toLocaleString('vi-VN')} VND
         </Typography>
         <Typography variant="body2" color="textSecondary" gutterBottom>
-          Trạng thái: {order.order.statusId === 2 ? 'Đã hoàn thành' : 'Đang xử lý'}
+          Trạng thái: {order.order.statusId === 3 ? 'Đã thanh toán' : 'Chưa thanh toán'}
         </Typography>
         <Divider sx={{ my: 2 }} />
         <List>

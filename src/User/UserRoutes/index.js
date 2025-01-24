@@ -1,4 +1,5 @@
 import OrderPage from "../components/OrderPage";
+import UserNotFound from "../pages/404";
 import UserCategoryByTeacher from "../pages/UserCategoryByTeacher";
 import UserCourse from "../pages/UserCourse";
 import UserForgotPass from "../pages/UserForgotPass";
@@ -15,10 +16,11 @@ const UserRoutes = [
     { path: '/order/:orderId', component: OrderPage },
     { path: '/courses/:courseId', component: UserCourse },
     { path: '/orders/user/:userId', component: UserYourOrder },
-    { path: '/courses/:courseId', component: UserCourse },
+    // { path: '/courses/:courseId', component: UserCourse },
     { path: '/teacherPost', component: UserTeacher },
     { path: '/teacherAddCategory', component: UserCategoryByTeacher },
     { path: '/forgot-password', component: UserForgotPass },
+    { path: '/user/NotFound404', component: UserNotFound },
 
 ];
 

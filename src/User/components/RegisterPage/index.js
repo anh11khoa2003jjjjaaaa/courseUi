@@ -86,7 +86,7 @@
 //     setLoading(true);
   
 //     try {
-//       await axios.post(`http://localhost:8080/public/accounts/register`, formData);
+//       await axios.post(`https://newcoursesbackend.onrender.com/public/accounts/register`, formData);
   
 //       toast.success("Đăng ký thành công!");
 //       setTimeout(() => {
@@ -340,7 +340,7 @@ const RegisterPage = () => {
     setLoading(true);
   
     try {
-      await axios.post(`http://localhost:8080/public/accounts/register`, formData);
+      await axios.post(`https://newcoursesbackend.onrender.com/public/accounts/register`, formData);
   
       toast.success("Đăng ký thành công!");
       setTimeout(() => {

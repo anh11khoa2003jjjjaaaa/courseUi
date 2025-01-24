@@ -8,12 +8,12 @@ export const useCartItems = (userID) => {
     if (!userID) return;
 
     try {
-      const response = await axios.get(`http://localhost:8080/public/carts/user/${userID}`);
+      const response = await axios.get(`https://newcoursesbackend.onrender.com/public/carts/user/${userID}`);
       const carts = response.data;
 
       const allCartDetails = await Promise.all(
         carts.map(async (cart) => {
-          const cartDetailsResponse = await axios.get(`http://localhost:8080/public/carts/details/${cart.cartID}`);
+          const cartDetailsResponse = await axios.get(`https://newcoursesbackend.onrender.com/public/carts/details/${cart.cartID}`);
           return cartDetailsResponse.data.map(item => ({
             cartDetailID: item.cartDetailID,
             cartID: item.cartID,

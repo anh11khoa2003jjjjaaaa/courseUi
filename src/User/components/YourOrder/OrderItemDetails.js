@@ -13,8 +13,8 @@ const OrderItemDetails = ({ item }) => {
     setIsVideoModalOpen(false);
   };
 
-  const thumbnailUrl = `http://localhost:8080/video/${item.course.thumbnailUrl.split('\\').pop()}`;
-  const videoUrl = `http://localhost:8080/video/${item.course.videoUrl.split('\\').pop()}`;
+  const thumbnailUrl = `https://newcoursesbackend.onrender.com/video/${item.course.thumbnailUrl.split('\\').pop()}`;
+  const videoUrl = `https://newcoursesbackend.onrender.com/video/${item.course.videoUrl.split('\\').pop()}`;
 
   return (
     <>

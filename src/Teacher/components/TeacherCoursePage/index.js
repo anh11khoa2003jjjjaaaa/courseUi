@@ -25,10 +25,10 @@
 
 //   const fetchApprovedCourses = async () => {
 //     try {
-//       const response = await axios.get('http://localhost:8080/public/courses');
+//       const response = await axios.get('https://newcoursesbackend.onrender.com/public/courses');
 
 //       setCourses(response.data);
-//       // const video = `http://localhost:8080/video/${response.data.videoUrl.split('\\').pop()}`;
+//       // const video = `https://newcoursesbackend.onrender.com/video/${response.data.videoUrl.split('\\').pop()}`;
 //       // setVideoUrl(video);
 //     } catch (error) {
 //       console.error('Failed to fetch approved courses:', error);
@@ -40,13 +40,13 @@
 //     setSearchTerm(event.target.value);
 //   };
 //   const handlReviewVideo=async(courseId)=>{
-//     const video=await axios.delete(`http://localhost:8080/public/courses/${courseId}`);
+//     const video=await axios.delete(`https://newcoursesbackend.onrender.com/public/courses/${courseId}`);
 //     setVideoUrl(video.data.videoUrl);
 //   }
 
 //   const handleDeleteCourse = async (courseId) => {
 //     try {
-//       await axios.delete(`http://localhost:8080/public/courses/${courseId}`);
+//       await axios.delete(`https://newcoursesbackend.onrender.com/public/courses/${courseId}`);
 //       fetchApprovedCourses();
 //       toast.success('Xóa khóa học thành công!');
 //     } catch (error) {
@@ -57,7 +57,7 @@
 
 //   const handleUpdateStatus = async (courseId) => {
 //     try {
-//       await axios.put(`http://localhost:8080/public/courses/${courseId}/status`, { status: 2 });
+//       await axios.put(`https://newcoursesbackend.onrender.com/public/courses/${courseId}/status`, { status: 2 });
 //       fetchApprovedCourses();
 //       toast.success('Duyệt khóa học thành công!');
 //     } catch (error) {
@@ -85,7 +85,7 @@
 
 //     try {
 //       // Gọi API cập nhật lý do từ chối
-//       await axios.put(`http://localhost:8080/public/courses/cancelReason/${selectedCourse.id}`, null, {
+//       await axios.put(`https://newcoursesbackend.onrender.com/public/courses/cancelReason/${selectedCourse.id}`, null, {
 //         params: { reason: rejectReason },
 //       });
 
@@ -250,7 +250,7 @@ const TeacherCoursePage = () => {
 
   const fetchApprovedCourses = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/public/courses');
+      const response = await axios.get('https://newcoursesbackend.onrender.com/public/courses');
       setCourses(response.data);
     } catch (error) {
       console.error('Failed to fetch approved courses:', error);
@@ -264,7 +264,7 @@ const TeacherCoursePage = () => {
 
   const handleDeleteCourse = async (courseId) => {
     try {
-      await axios.delete(`http://localhost:8080/public/courses/${courseId}`);
+      await axios.delete(`https://newcoursesbackend.onrender.com/public/courses/${courseId}`);
       fetchApprovedCourses();
       toast.success('Xóa khóa học thành công!');
     } catch (error) {
@@ -275,7 +275,7 @@ const TeacherCoursePage = () => {
 
   const handleUpdateStatus = async (courseId) => {
     try {
-      await axios.put(`http://localhost:8080/public/courses/${courseId}/status`, { status: 2 });
+      await axios.put(`https://newcoursesbackend.onrender.com/public/courses/${courseId}/status`, { status: 2 });
       fetchApprovedCourses();
       toast.success('Duyệt khóa học thành công!');
     } catch (error) {
@@ -302,7 +302,7 @@ const TeacherCoursePage = () => {
     }
 
     try {
-      await axios.put(`http://localhost:8080/public/courses/cancelReason/${selectedCourse.id}`, null, {
+      await axios.put(`https://newcoursesbackend.onrender.com/public/courses/cancelReason/${selectedCourse.id}`, null, {
         params: { reason: rejectReason },
       });
 
@@ -316,7 +316,7 @@ const TeacherCoursePage = () => {
   };
 
   // const handleOpenVideoModal = (videoUrl) => {
-  //   const video = `http://localhost:8080/video/${videoUrl.split('\\').pop()}`;
+  //   const video = `https://newcoursesbackend.onrender.com/video/${videoUrl.split('\\').pop()}`;
   //   setVideoUrl(video);
   //   setIsVideoModalOpen(true);
   // };
@@ -324,7 +324,7 @@ const TeacherCoursePage = () => {
     // Đảm bảo URL video đầy đủ và hợp lệ
     const fullVideoUrl = videoUrl.startsWith('http') 
       ? videoUrl 
-      : `http://localhost:8080/video/${videoUrl.split('\\').pop()}`;
+      : `https://newcoursesbackend.onrender.com/video/${videoUrl.split('\\').pop()}`;
     setVideoUrl(fullVideoUrl);
     setIsVideoModalOpen(true);
   };

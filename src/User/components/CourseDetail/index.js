@@ -27,6 +27,7 @@ import {
 import ReactPlayer from 'react-player';
 import { useCart } from '../CartContext';
 import ReviewerPage from '../ReviewerPage';
+import { jwtDecode } from 'jwt-decode';
 const CourseDetail = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
@@ -35,38 +36,52 @@ const CourseDetail = () => {
   const { addToCart } = useCart();
   const [averageRating, setAverageRating] = useState(0); // Giá trị trung bình
   const [reviewCount, setReviewCount] = useState(0);
+  const [roleName,setRoleName]=useState('');
+  const token = localStorage.getItem('authToken');
+  const[review,setReview]=useState([]);
   useEffect(() => {
+
+    const fetchRolename=async()=>{
+      if(token){
+        const decodedToken = jwtDecode(token);
+        setRoleName(decodedToken.RoleName);
+      }
+    }
     const fetchCourseDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/public/courses/${courseId}`);
+        const response = await axios.get(`https://newcoursesbackend.onrender.com/public/courses/${courseId}`);
         const courseData = {
           ...response.data,
-          videoUrl: `http://localhost:8080/video/${response.data.videoUrl.split('\\').pop()}`,
-          thumbnailUrl: `http://localhost:8080/video/${response.data.thumbnailUrl.split('\\').pop()}`,
+          videoUrl: `https://newcoursesbackend.onrender.com/video/${response.data.videoUrl.split('\\').pop()}`,
+          thumbnailUrl: `https://newcoursesbackend.onrender.com/video/${response.data.thumbnailUrl.split('\\').pop()}`,
         };
         setCourse(courseData);
 
         // Fetch teacher details
-        const teacherResponse = await axios.get(`http://localhost:8080/public/users/${courseData.teacherId}`);
+        const teacherResponse = await axios.get(`https://newcoursesbackend.onrender.com/public/users/${courseData.teacherId}`);
         setTeacher(teacherResponse.data);
   // Fetch reviews for the course
-  const reviewsResponse = await axios.get(`http://localhost:8080/api/reviews/course/${courseId}`);
+  const reviewsResponse = await axios.get(`https://newcoursesbackend.onrender.com/api/reviews/course/${courseId}`);
   const reviews = reviewsResponse.data;
-
-  // Calculate average rating and review count
-  if (reviews.length > 0) {
+  setReview(reviews);
+  const avg=()=>{
     const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
     setAverageRating(totalRating / reviews.length);
     setReviewCount(reviews.length);
   }
-} catch (error) {
+  // Calculate average rating and review count
+  if (reviews.length > 0) {
+    avg();
+    
+}} catch (error) {
   console.error('Không thể lấy thông tin khóa học:', error);
 } finally {
   setLoading(false);
 }
 };
+fetchRolename();
     fetchCourseDetails();
-  }, [courseId,averageRating,reviewCount]);
+  }, [courseId,roleName,review]);
 
   if (loading) {
     return <Typography>Đang tải...</Typography>;
@@ -115,6 +130,7 @@ const CourseDetail = () => {
                   variant="contained"
                   color="primary"
                   fullWidth
+                  disabled={roleName === "Admin"}
                   sx={{ mb: 2 }}
                   onClick={() => addToCart(course)}
                 >

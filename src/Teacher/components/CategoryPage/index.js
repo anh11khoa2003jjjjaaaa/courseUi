@@ -10,7 +10,7 @@ const CategoryPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
   const [currentCategory, setCurrentCategory] = useState(null);
-  const [errors, setErrors] = useState({});
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -37,37 +37,26 @@ const CategoryPage = () => {
     setCurrentCategory(category);
     setOpen(true);
   };
-  
+
   const handleDeleteCategory = async (categoryId) => {
     try {
       await axios.delete(`https://newcoursesbackend.onrender.com/public/categories/${categoryId}`);
       fetchCategories();
-      toast.success('Xóa chủ đề thành công!');
+      toast.success('Xóa danh mục thành công!');
     } catch (error) {
       console.error('Failed to delete category:', error);
       toast.error('Failed to delete category');
     }
   };
-  const validateForm = () => {
-    const newErrors = {};
-    if (!currentCategory?.name || currentCategory.name.trim() === '') {
-      newErrors.name = 'Tên chủ đề không được để trống!';
-    }
-  
-    setErrors(newErrors); // Cập nhật trạng thái lỗi để hiển thị nếu cần
-    return Object.keys(newErrors).length === 0; // Trả về true nếu không có lỗi
-  };
-  
+
   const handleSaveCategory = async () => {
-    if (!validateForm()) return; // Nếu không hợp lệ, dừng lại
-  
     try {
-      if (currentCategory?.id) {
+      if (currentCategory.id) {
         await axios.put(`https://newcoursesbackend.onrender.com/public/categories/${currentCategory.id}`, currentCategory);
-        toast.success('Cập nhật chủ đề thành công!');
+        toast.success('Cập nhật danh mục thành công!');
       } else {
         await axios.post('https://newcoursesbackend.onrender.com/public/categories', currentCategory);
-        toast.success('Thêm chủ đề thành công!');
+        toast.success('Thêm danh mục thành công!');
       }
       setOpen(false);
       fetchCategories();
@@ -76,29 +65,10 @@ const CategoryPage = () => {
       toast.error('Failed to save category');
     }
   };
-  
-  
-  // const handleSaveCategory = async () => {
-  //   try {
-  //     if (currentCategory.id) {
-  //       await axios.put(`https://newcoursesbackend.onrender.com/public/categories/${currentCategory.id}`, currentCategory);
-  //       toast.success('Cập nhật chủ đề thành công!');
-  //     } else {
-  //       await axios.post('https://newcoursesbackend.onrender.com/public/categories', currentCategory);
-  //       toast.success('Thêm chủ đề thành công!');
-  //     }
-  //     setOpen(false);
-  //     fetchCategories();
-  //   } catch (error) {
-  //     console.error('Failed to save category:', error);
-  //     toast.error('Failed to save category');
-  //   }
-  // };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setCurrentCategory({ ...currentCategory, [name]: value });
-    if (!validateForm()) return;
   };
 
   const filteredCategories = categories.filter(category =>
@@ -107,10 +77,12 @@ const CategoryPage = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-   
+      <Typography variant="h4" gutterBottom>
+        Quản lý danh mục
+      </Typography>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <TextField
-          label="Tìm kiếm chủ đề"
+          label="Tìm kiếm danh mục"
           variant="outlined"
           value={searchTerm}
           onChange={handleSearchChange}
@@ -123,7 +95,7 @@ const CategoryPage = () => {
           }}
         />
         <Button variant="contained" color="primary" startIcon={<Add />} onClick={handleAddCategory}>
-          Thêm chủ đề
+          Thêm danh mục
         </Button>
       </Box>
       <TableContainer component={Paper}>
@@ -131,7 +103,7 @@ const CategoryPage = () => {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>Tên chủ đề</TableCell>
+              <TableCell>Tên danh mục</TableCell>
               <TableCell>Hành động</TableCell>
             </TableRow>
           </TableHead>
@@ -155,25 +127,22 @@ const CategoryPage = () => {
       </TableContainer>
 
       <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>{currentCategory ? 'Chỉnh sửa chủ đề' : 'Thêm chủ đề'}</DialogTitle>
+        <DialogTitle>{currentCategory ? 'Chỉnh sửa danh mục' : 'Thêm danh mục'}</DialogTitle>
         <DialogContent>
-  <DialogContentText>
-    Vui lòng nhập thông tin chủ đề.
-  </DialogContentText>
-  <TextField
-    autoFocus
-    margin="dense"
-    label="Tên chủ đề"
-    type="text"
-    fullWidth
-    name="name"
-    value={currentCategory?.name || ''}
-    onChange={handleChange}
-    error={!!errors.name} // Hiển thị lỗi nếu có
-    helperText={errors.name} // Hiển thị thông báo lỗi
-  />
-</DialogContent>
-
+          <DialogContentText>
+            Vui lòng nhập thông tin danh mục.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Tên danh mục"
+            type="text"
+            fullWidth
+            name="name"
+            value={currentCategory?.name || ''}
+            onChange={handleChange}
+          />
+        </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)} color="primary">
             Hủy

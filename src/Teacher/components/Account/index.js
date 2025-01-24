@@ -17,7 +17,7 @@ const AccountPage = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/public/accounts');
+      const response = await axios.get('https://newcoursesbackend.onrender.com/public/accounts');
       setUsers(response.data);
     } catch (error) {
       console.error('Failed to fetch users:', error);
@@ -37,7 +37,7 @@ const AccountPage = () => {
 
   const handleSaveRole = async () => {
     try {
-      await axios.put(`http://localhost:8080/public/accounts/${editingUser.accountID}/role`, { roleId: newRole });
+      await axios.put(`https://newcoursesbackend.onrender.com/public/accounts/${editingUser.accountID}/role`, { roleId: newRole });
       fetchUsers();
       setEditingUser(null);
       setOpen(false);
@@ -55,11 +55,11 @@ const AccountPage = () => {
 
   const getRoleName = (roleId) => {
     switch (roleId) {
-      case 1:
-        return 'Quản trị viên';
-      case 2:
-        return 'Giáo viên';
       case 3:
+        return 'Quản trị viên';
+      case 1:
+        return 'Giáo viên';
+      case 2:
         return 'Học sinh';
       default:
         return 'Không xác định';
@@ -112,9 +112,9 @@ const AccountPage = () => {
             Vui lòng chọn quyền mới cho người dùng.
           </DialogContentText>
           <Select value={newRole} onChange={handleRoleChange} fullWidth>
-            <MenuItem value={1}>Quản trị viên</MenuItem>
-            <MenuItem value={2}>Giáo viên</MenuItem>
-            <MenuItem value={3}>Học sinh</MenuItem>
+            <MenuItem value={3}>Quản trị viên</MenuItem>
+            <MenuItem value={1}>Giáo viên</MenuItem>
+            <MenuItem value={2}>Học sinh</MenuItem>
           </Select>
         </DialogContent>
         <DialogActions>

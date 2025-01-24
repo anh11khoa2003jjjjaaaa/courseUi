@@ -23,11 +23,11 @@
 //   useEffect(() => {
 //     const fetchOrder = async () => {
 //       try {
-//         const response = await axios.get(`http://localhost:8080/public/orders/get/${orderId}`);
+//         const response = await axios.get(`https://newcoursesbackend.onrender.com/public/orders/get/${orderId}`);
 //         setOrderDetails(response.data);
 
 //         // Fetch user details
-//         const userResponse = await axios.get(`http://localhost:8080/public/users/${response.data.order.userId}`);
+//         const userResponse = await axios.get(`https://newcoursesbackend.onrender.com/public/users/${response.data.order.userId}`);
 //         setUserName(userResponse.data.displayName);
 //       } catch (error) {
 //         console.error('Failed to fetch order or user details:', error);
@@ -134,11 +134,11 @@ const navigave = useNavigate();
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/public/orders/get/${orderId}`);
+        const response = await axios.get(`https://newcoursesbackend.onrender.com/public/orders/get/${orderId}`);
         setOrderDetails(response.data);
 
         // Fetch user details
-        const userResponse = await axios.get(`http://localhost:8080/public/users/${response.data.order.userId}`);
+        const userResponse = await axios.get(`https://newcoursesbackend.onrender.com/public/users/${response.data.order.userId}`);
         setUserName(userResponse.data.displayName);
       } catch (error) {
         console.error('Failed to fetch order or user details:', error);
@@ -148,9 +148,10 @@ const navigave = useNavigate();
     fetchOrder();
   }, [orderId]);
 
+  
   const handlePayment = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/submitOrder', {
+      const response = await axios.post('https://newcoursesbackend.onrender.com/submitOrder', {
         amount: orderDetails.totalAmount,
         orderInfo: `Order ID: ${orderDetails.order.id}`
       });
@@ -185,10 +186,12 @@ const navigave = useNavigate();
                   <ListItemText primary="Người dùng" secondary={userName} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="Tổng giá" secondary={`${order.totalPrice} VND`} />
+                  <ListItemText primary="Tổng giá" secondary={`${order.totalPrice.toLocaleString('vi-VN')} VND`} />
                 </ListItem>
                 <ListItem>
-                  <ListItemText primary="Trạng thái" secondary={order.statusId} />
+                {order.statusId === 2 &&
+                  <ListItemText primary="Trạng thái" secondary="Chờ thành toán" />
+                }
                 </ListItem>
               </List>
             </CardContent>

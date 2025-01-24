@@ -97,15 +97,7 @@ const Sidebar = () => {
             <Divider />
 
             <List>
-                {/* <ListItem
-                    component={Link}
-                    to="/home"
-                    className={`${classes.menuItem} ${activeItem === '/home' ? classes.activeMenuItem : ''}`}
-                    onClick={() => handleItemClick('/home')}
-                >
-                    <Home className={classes.menuIcon} />
-                    <ListItemText primary="Trang chủ" />
-                </ListItem> */}
+                
                 <ListItem
                     component={Link}
                     to="/admin/courses"
@@ -117,16 +109,7 @@ const Sidebar = () => {
                 </ListItem>
 
 
-                {/* <ListItem
-  component={Link}
-  to="/teacher/category"
-  className={`${classes.menuItem} ${activeItem === '/teacher/category' ? classes.activeMenuItem : ''}`}
-  onClick={() => handleItemClick('/teacher/category')}
->
-  <Category className={classes.menuIcon} />
-  <ListItemText primary="Danh mục" />
-</ListItem>
-                */}
+              
                 <ListItem
                     component={Link}
                     to="/account"

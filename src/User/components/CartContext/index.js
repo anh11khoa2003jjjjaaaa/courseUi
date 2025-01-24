@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
       const decodedToken = jwtDecode(token);
       const accountID = decodedToken.AccountID;
 
-      axios.get(`http://localhost:8080/public/users/account/${accountID}`)
+      axios.get(`https://newcoursesbackend.onrender.com/public/users/account/${accountID}`)
         .then(response => {
           setFormData(prevFormData => ({
             ...prevFormData,
@@ -37,92 +37,89 @@ export const CartProvider = ({ children }) => {
     }
   }, [token]);
 
+  // const addToCart = async (course) => {
+  //   const updatedFormData = {
+  //     userID: formData.userID,
+  //     createdDate: new Date().toISOString(),
+  //     courseID: course.id,
+  //     quantity: 1,
+  //     price: course.price
+  //   };
+
+  //   try {
+  //     const response = await axios.post('https://newcoursesbackend.onrender.com/public/carts', updatedFormData);
+  //     const cartDetail = response.data.cartDetails[0];
+  //     const newCartItem = {
+  //       cartDetailID: cartDetail.cartDetailID,
+  //       cartID: response.data.cartID,
+  //       courseID: cartDetail.courseID,
+  //       title: course.title,
+  //       description: course.description,
+  //       quantity: cartDetail.quantity,
+  //       price: cartDetail.price,
+  //     };
+      
+  //     setCartItems(prevItems => [...prevItems, newCartItem]);
+  //     toast.success("Đã thêm vào giỏ hàng!");
+  //   } catch (error) {
+  //     console.error('Failed to save cart item to database:', error);
+  //     toast.error("Thêm vào giỏ hàng thất bại!");
+  //   }
+  // };
+
   const addToCart = async (course) => {
     const updatedFormData = {
       userID: formData.userID,
       createdDate: new Date().toISOString(),
       courseID: course.id,
       quantity: 1,
-      price: course.price
+      price: course.price,
     };
-
+  
     try {
-      const response = await axios.post('http://localhost:8080/public/carts', updatedFormData);
-      const cartDetail = response.data.cartDetails[0];
-      const newCartItem = {
-        cartDetailID: cartDetail.cartDetailID,
-        cartID: response.data.cartID,
-        courseID: cartDetail.courseID,
-        title: course.title,
-        description: course.description,
-        quantity: cartDetail.quantity,
-        price: cartDetail.price,
-      };
-      
-      setCartItems(prevItems => [...prevItems, newCartItem]);
-      toast.success("Đã thêm vào giỏ hàng!");
+      // Gửi yêu cầu thêm vào giỏ hàng
+      const response = await axios.post('https://newcoursesbackend.onrender.com/public/carts', updatedFormData);
+  
+      // Xử lý dữ liệu trả về nếu thành công
+      const cartDetail = response.data.cart.cartDetails.find(
+        (detail) => detail.courseID === course.id
+      );
+  
+      if (cartDetail) {
+        const newCartItem = {
+          cartDetailID: cartDetail.cartDetailID,
+          cartID: response.data.cart.cartID,
+          courseID: cartDetail.courseID,
+          title: course.title,
+          description: course.description,
+          quantity: cartDetail.quantity,
+          price: cartDetail.price,
+        };
+  
+        // Cập nhật danh sách giỏ hàng trong state
+        setCartItems((prevItems) => [...prevItems, newCartItem]);
+        toast.success("Đã thêm vào giỏ hàng!");
+      }
     } catch (error) {
-      console.error('Failed to save cart item to database:', error);
-      toast.error("Thêm vào giỏ hàng thất bại!");
+      // Kiểm tra phản hồi lỗi từ server
+      if (error.response && error.response.data && error.response.data.status === "error") {
+        // Nếu lỗi do khóa học đã được đặt hàng trước đó
+        const errorMessage = error.response.data.message || "Khóa học này đã được đặt hàng trước đó.";
+        toast.error(errorMessage);
+      } else {
+        // Xử lý các lỗi khác
+        console.error("Đã xảy ra lỗi:", error);
+        toast.error("Thêm vào giỏ hàng thất bại. Vui lòng thử lại.");
+      }
     }
   };
-  // const addToCart = async (course) => {
-  //   try {
-  //     // Kiểm tra sản phẩm đã tồn tại trong giỏ hàng hay chưa
-  //     const existingItem = cartItems.find((item) => item.courseID === course.id);
   
-  //     if (existingItem) {
-  //       // Nếu sản phẩm đã tồn tại, tăng số lượng sản phẩm
-  //       const updatedQuantity = existingItem.quantity + 1;
-       
-  
-  //       // Không cần thêm sản phẩm mới vào giỏ hàng, chỉ cập nhật số lượng
-  //       setCartItems((prevItems) =>
-  //         prevItems.map((item) =>
-  //           item.cartDetailID === existingItem.cartDetailID
-  //             ? { ...item, quantity: updatedQuantity }
-  //             : item
-  //         )
-  //       );
-  
-  //       toast.success(`Đã tăng số lượng sản phẩm "${course.title}"!`);
-  //     } else {
-  //       // Nếu sản phẩm chưa tồn tại, thêm mới vào giỏ hàng
-  //       const updatedFormData = {
-  //         userID: formData.userID,
-  //         createdDate: new Date().toISOString(),
-  //         courseID: course.id,
-  //         quantity: 1,
-  //         price: course.price,
-  //       };
-  
-  //       const response = await axios.post('http://localhost:8080/public/carts', updatedFormData);
-  //       const cartDetail = response.data.cartDetails[0];
-  //       const newCartItem = {
-  //         cartDetailID: cartDetail.cartDetailID,
-  //         cartID: response.data.cartID,
-  //         courseID: cartDetail.courseID,
-  //         title: course.title,
-  //         description: course.description,
-  //         quantity: cartDetail.quantity,
-  //         price: cartDetail.price,
-  //       };
-  
-  //       // Thêm sản phẩm mới vào giỏ hàng
-  //       setCartItems((prevItems) => [...prevItems, newCartItem]);
-  //       toast.success(`Đã thêm sản phẩm "${course.title}" vào giỏ hàng!`);
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to update cart item:', error);
-  //     toast.error('Cập nhật giỏ hàng thất bại!');
-  //   }
-  // };
   
   
   
   const removeFromCart = async (cartDetailID) => {
     try {
-      await axios.delete(`http://localhost:8080/public/carts/details/${cartDetailID}`);
+      await axios.delete(`https://newcoursesbackend.onrender.com/public/carts/details/${cartDetailID}`);
       setCartItems(prevItems => prevItems.filter(item => item.cartDetailID !== cartDetailID));
       toast.success("Đã xóa khỏi giỏ hàng!");
     } catch (error) {
@@ -133,12 +130,13 @@ export const CartProvider = ({ children }) => {
 
   const clearCart = async () => {
     try {
-      await axios.delete(`http://localhost:8080/public/carts/user/${formData.userID}`);
+      await axios.delete(`https://newcoursesbackend.onrender.com/public/carts/user/${formData.userID}`);
       setCartItems([]);
     } catch (error) {
       console.error('Failed to clear cart in database:', error);
     }
   };
+
 
   const checkout = async () => {
     try {
@@ -152,7 +150,7 @@ export const CartProvider = ({ children }) => {
         }))
       };
 
-      const response = await axios.post('http://localhost:8080/public/orders', orderPayload, {
+      const response = await axios.post('https://newcoursesbackend.onrender.com/public/orders', orderPayload, {
         headers: {
           'Content-Type': 'application/json'
         }

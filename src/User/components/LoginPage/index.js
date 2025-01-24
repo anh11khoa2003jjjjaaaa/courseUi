@@ -8,7 +8,7 @@ import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import {jwtDecode} from "jwt-decode";
 import { Google as GoogleIcon } from '@mui/icons-material';
 import Cookies from "js-cookie";
-const API_URL = 'http://localhost:8080';
+const API_URL = 'https://newcoursesbackend.onrender.com';
 
 const LoginPage = () => {
   const [username, setUsername] = useState("");

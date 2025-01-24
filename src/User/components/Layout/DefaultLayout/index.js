@@ -18,16 +18,19 @@ const DefaultLayout = ({ children }) => {
     const [user, setUser] = useState(null);
     const[usertoken,setUsertoken]=useState(null);
     const navigate = useNavigate();
-const { cartItems, addToCart } = useCart();
+   
+  
 
+const { cartItems, addToCart } = useCart();
+const [userRole, setUserRole] = useState("");
     useEffect(() => {
         // Lấy dữ liệu khóa học từ backend khi component được mount
         const fetchCourses = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/public/courses');
+                const response = await axios.get('https://newcoursesbackend.onrender.com/public/courses');
                 const updatedCourses = response.data.map(course => ({
                     ...course,
-                    thumbnailUrl: `http://localhost:8080/video/${course.thumbnailUrl.split('\\').pop()}`
+                    thumbnailUrl: `https://newcoursesbackend.onrender.com/video/${course.thumbnailUrl.split('\\').pop()}`
                 }));
                 setCourses(updatedCourses);
                 setSearchResults(updatedCourses); // Hiển thị tất cả khóa học ban đầu
@@ -36,9 +39,12 @@ const { cartItems, addToCart } = useCart();
             }
         };
 
+        
         fetchCourses();
+        
     }, []); // Chỉ chạy một lần khi component được mount
 
+  
     
     useEffect(() => {
         const checkAuth = async () => {
@@ -49,7 +55,7 @@ const { cartItems, addToCart } = useCart();
             if (token) {
                 try {
                     const decodedToken = jwtDecode(token);
-    
+                    setUserRole(decodedToken.RoleName); // Lưu RoleName từ token
                     // Nếu token từ cookie, lưu vào localStorage
                     if (cookieToken && !localToken) {
                         localStorage.setItem('authToken', cookieToken);
@@ -57,7 +63,7 @@ const { cartItems, addToCart } = useCart();
     
                     // Fetch user data với token
                     const response = await axios.get(
-                        `http://localhost:8080/public/users/account/${decodedToken.AccountID}`,
+                        `https://newcoursesbackend.onrender.com/public/users/account/${decodedToken.AccountID}`,
                         {
                             headers: {
                                 'Authorization': `Bearer ${token}`
@@ -157,7 +163,8 @@ const { cartItems, addToCart } = useCart();
                                                         size="small"
                                                         color="primary"
                                                         component={Link} // Thêm này
-                                                        to={`/courses/${course.id}`} // Thêm này
+                                                        to={`/courses/${course.id}`}
+                                                        onClick={handleClose} // Thêm này
                                                     >
                                                         Xem chi tiết
                                                     </Button>
@@ -165,6 +172,7 @@ const { cartItems, addToCart } = useCart();
                                                         size="small"
                                                         color="primary"
                                                         onClick={() => addToCart(course)}
+                                                        disabled={userRole === 'Admin'} // Disable nếu userRole là Admin
                                                     >
                                                         Thêm vào giỏ
                                                     </Button>
@@ -181,7 +189,7 @@ const { cartItems, addToCart } = useCart();
                         </Box>
                     </DialogContent>
                 </Dialog>
-                {/* {user && usertoken && <ChatboxToggle />} */}
+                {user && usertoken && <ChatboxToggle />}
             </main>
             
             <Footer />

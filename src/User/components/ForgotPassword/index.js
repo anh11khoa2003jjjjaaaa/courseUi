@@ -9,7 +9,7 @@ const ForgotPassword = () => {
 
   const handleForgotPassword = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/public/auth/forgot-password', null, {
+      const response = await axios.post('https://newcoursesbackend.onrender.com/public/auth/forgot-password', null, {
         params: { email },
       });
       toast.success(response.data);
