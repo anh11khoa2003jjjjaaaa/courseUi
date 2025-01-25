@@ -63,16 +63,15 @@ const VideoModal = ({ open, onClose, videoUrl }) => {
           width: '800px'
         }}
       >
-        <video
-          controls
-          autoPlay
+        <iframe
+          src={videoUrl} // Sử dụng videoUrl làm src
+          title="video"
           width="100%"
-          height="auto"
-          style={{ maxHeight: '70vh' }}
-        >
-          <source src={videoUrl} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+          height="500px" // Chiều cao cố định hoặc có thể điều chỉnh
+          style={{ border: 'none', maxHeight: '70vh' }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
       </Box>
     </Modal>
   );

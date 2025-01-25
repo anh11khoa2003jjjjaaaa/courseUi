@@ -29,6 +29,19 @@ const Navbar = ({ onSearch, user, onLogout, usertoken }) => {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const formatThumbnailUrl = (url) => {
+    if (!url) return "default-image.jpg";
+  
+    // Check if it's a Google Drive URL
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      const fileId = fileIdMatch[1]; 
+      console.log(fileId);// Lấy fileId từ URL
+      // Trả về URL hình ảnh đúng định dạng
+      return `https://lh3.googleusercontent.com/d/${fileId}`;
+    }
+    return url; // Trả về URL gốc nếu không phải là URL Google Drive
+  };
 
   useEffect(() => {
     if (debouncedSearchTerm) {
@@ -63,7 +76,7 @@ const Navbar = ({ onSearch, user, onLogout, usertoken }) => {
 
         const formattedCourses = response.data.map((course) => ({
           ...course,
-          thumbnailUrl: `https://newcoursesbackend.onrender.com/video/${course.thumbnailUrl.split("\\").pop()}`,
+          thumbnailUrl: formatThumbnailUrl(course.thumbnailUrl),
         }));
 
         setCourses(formattedCourses);
@@ -100,7 +113,7 @@ const Navbar = ({ onSearch, user, onLogout, usertoken }) => {
   };
 
   const handleCourseClick = (courseId) => {
-    // navigate(`/courses/${courseId}`); // Navigate to course detail page
+    navigate(`/courses/${courseId}`); // Navigate to course detail page
     handleDialogClose();
   };
   const handleAddToCart = useCallback(
@@ -110,7 +123,7 @@ const Navbar = ({ onSearch, user, onLogout, usertoken }) => {
     [addToCart]
   );
   return (
-    <AppBar position="fixed">{/*static*/}
+    <AppBar position="static">{/*static*/}
       <Toolbar sx={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -161,11 +174,13 @@ const Navbar = ({ onSearch, user, onLogout, usertoken }) => {
             marginRight: "20px",
           }}
         >
+          {usertoken === "Student" &&(
           <Select
             value={selectedCategory}
             onChange={handleCategoryChange}
             displayEmpty
             sx={{ height: 40 }}
+            
           >
             <MenuItem value="">
               <em>Chọn danh mục</em>
@@ -176,6 +191,7 @@ const Navbar = ({ onSearch, user, onLogout, usertoken }) => {
               </MenuItem>
             ))}
           </Select>
+          )}
         </FormControl>
 
         {/* Dialog hiển thị danh sách khóa học */}

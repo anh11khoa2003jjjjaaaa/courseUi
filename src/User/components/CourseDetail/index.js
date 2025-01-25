@@ -39,6 +39,27 @@ const CourseDetail = () => {
   const [roleName,setRoleName]=useState('');
   const token = localStorage.getItem('authToken');
   const[review,setReview]=useState([]);
+
+  // Hàm xử lý URL thumbnail
+  const formatThumbnailUrl = (url) => {
+    if (!url) return "default-image.jpg";
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
+    }
+    return url;
+  };
+
+  // Hàm xử lý URL video
+  const formatVideoUrl = (url) => {
+    if (!url) return "";
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+    }
+    return url;
+  };
+
   useEffect(() => {
 
     const fetchRolename=async()=>{
@@ -52,8 +73,8 @@ const CourseDetail = () => {
         const response = await axios.get(`https://newcoursesbackend.onrender.com/public/courses/${courseId}`);
         const courseData = {
           ...response.data,
-          videoUrl: `https://newcoursesbackend.onrender.com/video/${response.data.videoUrl.split('\\').pop()}`,
-          thumbnailUrl: `https://newcoursesbackend.onrender.com/video/${response.data.thumbnailUrl.split('\\').pop()}`,
+          videoUrl: formatVideoUrl(response.data.videoUrl),
+          thumbnailUrl: formatThumbnailUrl(response.data.thumbnailUrl),
         };
         setCourse(courseData);
 
@@ -115,13 +136,22 @@ fetchRolename();
           </Grid>
           <Grid item xs={12} md={4}>
             <Card>
-              <ReactPlayer
-                url={course.videoUrl}
-                width="100%"
-                height="200px"
-                controls
-                light={course.thumbnailUrl}
-              />
+            <div style={{ position: 'relative', paddingTop: '56.25%' }}>
+                <iframe
+                  src={course.videoUrl}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    border: 'none'
+                  }}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  title="course-preview"
+                />
+              </div>
               <CardContent>
                 <Typography variant="h5" gutterBottom>
                   {course.price.toLocaleString('vi-VN')} VND

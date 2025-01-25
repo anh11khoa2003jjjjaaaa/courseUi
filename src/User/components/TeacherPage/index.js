@@ -472,7 +472,24 @@ const TeacherPage = () => {
   const [teacherId, setTeacherId] = useState(null);
 
   const token = localStorage.getItem('authToken');
+  const formatThumbnailUrl = (url) => {
+    if (!url) return "default-image.jpg";
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
+    }
+    return url;
+  };
 
+  // Hàm xử lý URL video
+  const formatVideoUrl = (url) => {
+    if (!url) return "";
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+    }
+    return url;
+  };
   useEffect(() => {
     if (token) {
       try {
@@ -542,8 +559,10 @@ const TeacherPage = () => {
     setCurrentCourse(course);
     setThumbnail(null);
     setVideo(null);
-    setThumbnailPreview(`https://newcoursesbackend.onrender.com/video/${course.thumbnailUrl.split('\\').pop()}`);
-    setVideoPreview(`https://newcoursesbackend.onrender.com/video/${course.videoUrl.split('\\').pop()}`);
+    const A=formatThumbnailUrl(course.thumbnailUrl);
+    const B=formatVideoUrl(course.videoUrl);
+    setThumbnailPreview(A);
+    setVideoPreview(B);
     setErrors({});
     setOpen(true);
   };
@@ -807,10 +826,13 @@ const TeacherPage = () => {
           </label>
           {videoPreview && (
             <Box mt={2}>
-              <video controls style={{ width: '100%' }}>
-                <source src={videoPreview} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              <iframe
+  src={videoPreview} // Sử dụng URL nhúng video
+  title="Video Preview"
+  style={{ width: '100%', height: '400px', border: 'none' }}
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowFullScreen
+/>
             </Box>
           )}
           {errors.video && (

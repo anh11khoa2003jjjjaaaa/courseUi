@@ -23,6 +23,25 @@ const DefaultLayout = ({ children }) => {
 
 const { cartItems, addToCart } = useCart();
 const [userRole, setUserRole] = useState("");
+
+const formatThumbnailUrl = (url) => {
+    if (!url) return "default-image.jpg";
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
+    }
+    return url;
+  };
+
+  // Hàm xử lý URL video
+  const formatVideoUrl = (url) => {
+    if (!url) return "";
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+    }
+    return url;
+  };
     useEffect(() => {
         // Lấy dữ liệu khóa học từ backend khi component được mount
         const fetchCourses = async () => {
@@ -30,7 +49,7 @@ const [userRole, setUserRole] = useState("");
                 const response = await axios.get('https://newcoursesbackend.onrender.com/public/courses');
                 const updatedCourses = response.data.map(course => ({
                     ...course,
-                    thumbnailUrl: `https://newcoursesbackend.onrender.com/video/${course.thumbnailUrl.split('\\').pop()}`
+                    thumbnailUrl: formatThumbnailUrl(course.thumbnailUrl),
                 }));
                 setCourses(updatedCourses);
                 setSearchResults(updatedCourses); // Hiển thị tất cả khóa học ban đầu
@@ -141,12 +160,11 @@ const [userRole, setUserRole] = useState("");
                                     searchResults.map(course => (
                                         <Grid item xs={12} sm={6} md={4} key={course.id}>
                                             <Card>
-                                                <CardMedia
-                                                    component="img"
-                                                    height="140"
-                                                    image={course.thumbnailUrl}
-                                                    alt={course.title}
-                                                />
+                                            <img
+  src={course.thumbnailUrl} // Sử dụng thuộc tính src thay vì image
+  alt={course.title}
+  style={{ height: "140px", width: "100%", objectFit: "cover" }} // Thiết lập chiều cao và kiểu hiển thị
+/>
                                                 <CardContent>
                                                     <Typography gutterBottom variant="h5" component="div">
                                                         {course.title}

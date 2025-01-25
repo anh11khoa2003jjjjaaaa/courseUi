@@ -53,6 +53,21 @@ const UserHomePage = () => {
       description: "Khám phá và phát triển bản thân qua những khóa học đột phá.",
     },
   ];
+  // Updated function to handle Google Drive URLs
+ 
+  const formatThumbnailUrl = (url) => {
+    if (!url) return "default-image.jpg";
+  
+    // Check if it's a Google Drive URL
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      const fileId = fileIdMatch[1]; 
+      console.log(fileId);// Lấy fileId từ URL
+      // Trả về URL hình ảnh đúng định dạng
+      return `https://lh3.googleusercontent.com/d/${fileId}`;
+    }
+    return url; // Trả về URL gốc nếu không phải là URL Google Drive
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -75,7 +90,7 @@ const UserHomePage = () => {
       .then((response) => {
         const updatedCourses = response.data.map((course) => ({
           ...course,
-          thumbnailUrl: `https://newcoursesbackend.onrender.com/video/${course.thumbnailUrl.split("\\").pop()}`,
+          thumbnailUrl: formatThumbnailUrl(course.thumbnailUrl),
         }));
         setCourses(updatedCourses);
       })
@@ -164,12 +179,23 @@ const UserHomePage = () => {
           {courses.map((course) => (
             <Grid item xs={12} sm={6} md={4} key={course.id}>
               <Card>
-                <CardMedia
-                  component="img"
-                  height="160"
-                  image={course.thumbnailUrl}
-                  alt={course.title}
+              <div style={{ position: 'relative', paddingTop: '56.25%' }}>
+                <img
+                  src={course.thumbnailUrl || "default-image.jpg"}
+                  alt={course.title || "Course thumbnail"}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                  onError={(e) => {
+                    e.target.src = "default-image.jpg";
+                  }}
                 />
+              </div>
                 <CardContent>
                   <Typography variant="h6">{course.title}</Typography>
                   <Typography variant="body2">
@@ -186,7 +212,7 @@ const UserHomePage = () => {
                     size="small"
                     variant="contained"
                     color="primary"
-                    onClick={() => handleAddToCart(course)}
+                    onClick={() => addToCart(course)}
                   >
                     Thêm vào giỏ
                   </Button>

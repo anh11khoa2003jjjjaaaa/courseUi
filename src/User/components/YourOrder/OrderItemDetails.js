@@ -4,7 +4,25 @@ import VideoModal from './VideoModal';
 
 const OrderItemDetails = ({ item }) => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  // Hàm xử lý URL thumbnail
+  const formatThumbnailUrl = (url) => {
+    if (!url) return "default-image.jpg";
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      return `https://lh3.googleusercontent.com/d/${fileIdMatch[1]}`;
+    }
+    return url;
+  };
 
+  // Hàm xử lý URL video
+  const formatVideoUrl = (url) => {
+    if (!url) return "";
+    const fileIdMatch = url.match(/(?:\/d\/|id=)([^\/&]+)/);
+    if (fileIdMatch) {
+      return `https://drive.google.com/file/d/${fileIdMatch[1]}/preview`;
+    }
+    return url;
+  };
   const handleThumbnailClick = () => {
     setIsVideoModalOpen(true);
   };
@@ -13,8 +31,8 @@ const OrderItemDetails = ({ item }) => {
     setIsVideoModalOpen(false);
   };
 
-  const thumbnailUrl = `https://newcoursesbackend.onrender.com/video/${item.course.thumbnailUrl.split('\\').pop()}`;
-  const videoUrl = `https://newcoursesbackend.onrender.com/video/${item.course.videoUrl.split('\\').pop()}`;
+  const thumbnailUrl = formatThumbnailUrl(item.course.thumbnailUrl);
+  const videoUrl =formatVideoUrl(item.course.thumbnailUrl);
 
   return (
     <>
@@ -29,17 +47,16 @@ const OrderItemDetails = ({ item }) => {
           }}
           onClick={handleThumbnailClick}
         >
-          <CardMedia
-            component="img"
-            sx={{ 
-              width: 160,
-              height: 90,
-              borderRadius: 1,
-              objectFit: 'cover'
-            }}
-            image={thumbnailUrl}
-            alt={item.course.title}
-          />
+          <img
+  src={thumbnailUrl} // Sử dụng thuộc tính src thay vì image
+  alt={item.course.title}
+  style={{ 
+    width: 160, // Chiều rộng
+    height: 90, // Chiều cao
+    borderRadius: 4, // Độ bo góc (1 trong sx tương đương 4px)
+    objectFit: 'cover' // Đảm bảo hình ảnh phủ kín khung
+  }}
+/>
         </Box>
         <ListItemText
           primary={
