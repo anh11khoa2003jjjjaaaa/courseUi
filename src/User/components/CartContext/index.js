@@ -143,7 +143,7 @@ export const CartProvider = ({ children }) => {
       const orderPayload = {
         userId: formData.userID,
         totalPrice: cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
-        statusId: 2,
+        statusId: 3,
         orderItems: cartItems.map(item => ({
           courseId: item.courseID,
           quantity: item.quantity

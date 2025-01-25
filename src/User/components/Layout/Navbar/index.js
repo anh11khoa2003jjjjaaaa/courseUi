@@ -145,24 +145,25 @@ const Navbar = ({ onSearch, user, onLogout, usertoken }) => {
             cursor: 'pointer'
           }}
         >
-          <Avatar
-            sx={{
-              width: 50,
-              height: 50,
-              '& img': {
-                objectFit: 'contain'
-              }
-            }}
-          >
-            <img src={logo} alt="CourseShop Logo" style={{ width: '100%', height: '100%' }} />
-          </Avatar>
+    <Avatar
+      sx={{
+        width: 50,
+        height: 50,
+        backgroundColor: 'blue', // Màu nền xanh
+        color: 'white', // Chữ màu trắng
+        fontSize: '24px', // Kích thước chữ
+        fontWeight: 'bold', // Độ đậm của chữ
+      }}
+    >
+      K
+    </Avatar>
           <Typography
             variant="h6"
             sx={{
               fontWeight: 'bold'
             }}
           >
-            CourseShop
+            Kurge
           </Typography>
         </Box>
 
