@@ -327,7 +327,8 @@ const Navbar = ({ onSearch, user, onLogout, usertoken }) => {
             disabled={usertoken === "Admin"}
           >
             <Badge badgeContent={cartItems.length} color="error">
-              <ShoppingCartIcon />
+            {usertoken === "Student" && <ShoppingCartIcon />}
+
             </Badge>
           </IconButton>
         </Box>
