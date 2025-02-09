@@ -32,7 +32,7 @@ const OrderItemDetails = ({ item }) => {
   };
 
   const thumbnailUrl = formatThumbnailUrl(item.course.thumbnailUrl);
-  const videoUrl =formatVideoUrl(item.course.thumbnailUrl);
+  const videoUrl =formatVideoUrl(item.course.videoUrl);
 
   return (
     <>
